@@ -1,21 +1,20 @@
 package com.nhnacademy.gw1.parking.user;
 
-import java.math.BigDecimal;
 
 public class User {
-    private final Long userId;
-    private final BigDecimal amount;
+    private final UserId userId;
+    private final Money amount;
 
-    public User(Long userId, BigDecimal amount) {
+    public User(UserId userId, Money amount) {
         this.userId = userId;
         this.amount = amount;
     }
 
-    public Long getUserId() {
+    public UserId getUserId() {
         return userId;
     }
 
-    public BigDecimal getAmount() {
+    public Money getAmount() {
         return amount;
     }
 }
