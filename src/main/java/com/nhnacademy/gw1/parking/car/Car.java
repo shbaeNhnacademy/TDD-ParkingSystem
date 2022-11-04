@@ -4,16 +4,20 @@ import com.nhnacademy.gw1.parking.exception.InvalidCarNumberException;
 import com.nhnacademy.gw1.parking.user.User;
 
 public class Car {
-    private final int number;
+    private final Integer number;
     private final User user;
+    private final CarGrade grade;
 
-    public Car(int number, User user) {
+
+    public Car(Integer number, User user, CarGrade grade) {
         checkCarNumber(number);
         this.number = number;
         this.user = user;
+        this.grade = grade;
     }
 
-    public int getNumber() {
+
+    public Integer getNumber() {
         return number;
     }
 
@@ -21,7 +25,11 @@ public class Car {
         return user;
     }
 
-    private void checkCarNumber(int number) {
+    public CarGrade getGrade() {
+        return grade;
+    }
+
+    private void checkCarNumber(Integer number) {
         boolean matches = String.valueOf(number).matches("^[0-9]{4}$");
         if (!matches) {
             throw new InvalidCarNumberException(number);

@@ -3,15 +3,15 @@ package com.nhnacademy.gw1.parking.parking;
 import com.nhnacademy.gw1.parking.car.Car;
 
 public class ParkingSpace {
-    private final String code;
+    private final ParkingSpaceCode code;
     private final Car car;
 
-    public ParkingSpace(String code, Car car) {
+    public ParkingSpace(ParkingSpaceCode code, Car car) {
         this.code = code;
         this.car = car;
     }
 
-    public String getCode() {
+    public ParkingSpaceCode getCode() {
         return code;
     }
 
