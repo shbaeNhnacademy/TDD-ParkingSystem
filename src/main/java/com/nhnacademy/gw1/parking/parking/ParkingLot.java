@@ -28,6 +28,9 @@ public class ParkingLot {
         parkingSpaceMap = new ConcurrentHashMap<>();
     }
 
+    public Map<ParkingSpaceCode, ParkingSpace> getParkingSpaceMap() {
+        return parkingSpaceMap;
+    }
 
     public ParkingSpaceCode enter(Car car) {
         Car scanCar = this.enterance.scan(car);
@@ -48,11 +51,7 @@ public class ParkingLot {
         return null;
     }
 
-    public Map<ParkingSpaceCode, ParkingSpace> getParkingSpaceMap() {
-        return parkingSpaceMap;
-    }
-
-    public ParkingSpaceCode park(Car car) {
+    private ParkingSpaceCode park(Car car) {
         ParkingSpaceCode code = verifyParkingSpace();
         if (!Objects.isNull(code)) {
             parkingSpaceMap.put(code, new ParkingSpace(code, car));

@@ -15,13 +15,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class ParkingLotTest {
 
@@ -59,6 +60,8 @@ class ParkingLotTest {
         Map<ParkingSpaceCode, ParkingSpace> parkingSpaceMap = parkingLot.getParkingSpaceMap();
 
         assertThat(parkingSpaceMap.containsKey(enter)).isTrue();
+
+        verify(enterance, times(1)).scan(any());
     }
 
     @Test
@@ -73,14 +76,20 @@ class ParkingLotTest {
     }
 
     @Test
-    @DisplayName("차량 만차 시 예외 발생")
-    void park_fail_fullParkedCar_thenThrowFullParkingSpaceException() {
+    @DisplayName("차량 만차시 예외 발생 ")
+    void enter_fail_fullParkedCar_thenThrowFullParkingSpaceException() {
         for (int i = 0; i < ParkingSpaceCode.values().length; i++) {
-            parkingLot.park(new Car((1200 + i), user, CarGrade.COMPACT));
+            Car tempCar = new Car((1200 + i), user, CarGrade.COMPACT);
+            when(enterance.scan(tempCar)).thenReturn(tempCar);
+            parkingLot.enter(tempCar);
         }
-        assertThatThrownBy(() -> parkingLot.park(car))
+
+        when(enterance.scan(car)).thenReturn(car);
+        assertThatThrownBy(() -> parkingLot.enter(car))
                 .isInstanceOf(FullLotException.class)
                 .hasMessageContainingAll("Full lot", car.getNumber().toString());
+
+        verify(enterance, times(ParkingSpaceCode.values().length + 1)).scan(any());
     }
 
     @Test
