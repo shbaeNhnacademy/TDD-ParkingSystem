@@ -30,4 +30,42 @@ public class ParkingSystem {
         Duration between = Duration.between(car.getUser().getStartDateTime(), endDateTime);
         return between.getSeconds();
     }
+
+    public long extractPrice(long elapsedSec) {
+        UsingPeriod usingPeriod = new UsingPeriod(elapsedSec);
+
+        int totalMinutes = usingPeriod.getMinutes() + usingPeriod.getHours() * 60;
+//        System.out.println(usingPeriod.getDays() + " / " + usingPeriod.getHours()+ " / " + totalMinutes+ " / " + usingPeriod.getSecs());
+
+        return calculateByPricePolicy(usingPeriod.getDays(), totalMinutes, usingPeriod.getSecs());
+    }
+
+    private long calculateByPricePolicy(int days, int minutes, int secs) {
+        long price = 0L;
+        int restMinutes = minutes - PricePolicy.DEFAULT.getTerm(); //기본 부과 시간
+        if (days != 0) {
+            price = getPrice(secs, price, restMinutes);
+            price += PricePolicy.DAY.getPriceWon() * days; //일 부과 요금
+        }else{
+            price = PricePolicy.DEFAULT.getPriceWon(); //기본 부과 요금
+            price = getPrice(secs, price, restMinutes);
+        }
+//        System.out.println("## price = " + price);
+
+        return price;
+    }
+
+    private long getPrice(int secs, long price, int restMinutes) {
+        while (restMinutes >= 0 || secs != 0) {
+            if (price >= PricePolicy.DAY.getPriceWon()) { //일 부과 요금
+                break;
+            } else if (restMinutes <= 0 && secs != 0) {
+                price += PricePolicy.ADDITIONAL.getPriceWon(); //추가 부과 요금
+                break;
+            }
+            price += PricePolicy.ADDITIONAL.getPriceWon(); //추가 부과 요금
+            restMinutes -= PricePolicy.ADDITIONAL.getTerm(); // 추가 부과 기준 시간
+        }
+        return price;
+    }
 }

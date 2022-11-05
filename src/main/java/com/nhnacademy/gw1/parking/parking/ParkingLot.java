@@ -15,13 +15,15 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ParkingLot {
 
     private final Map<ParkingSpaceCode, ParkingSpace> parkingSpaceMap;
+    private final ParkingSystem parkingSystem;
     private final Enterance enterance;
     private final Exit exit;
 
     private static final int MAX_SPACE_SIZE = ParkingSpaceCode.values().length;
 
 
-    public ParkingLot(Enterance enterance, Exit exit) {
+    public ParkingLot(ParkingSystem parkingSystem, Enterance enterance, Exit exit) {
+        this.parkingSystem = parkingSystem;
         this.enterance = enterance;
         this.exit = exit;
 
@@ -35,7 +37,9 @@ public class ParkingLot {
     public ParkingSpaceCode enter(Car car) {
         Car scanCar = this.enterance.scan(car);
         checkDuplicateCarNum(scanCar);
-        return park(scanCar);
+        ParkingSpaceCode park = park(scanCar);
+        parkingSystem.getUsers().add(car.getUser());
+        return park;
     }
 
     private void checkDuplicateCarNum(Car car) {

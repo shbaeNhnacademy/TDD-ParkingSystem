@@ -11,8 +11,9 @@ public class EastExit implements Exit{
     @Override
     public Car pay(Car car, ParkingSystem system, LocalDateTime endDateTime) {
         long elapsedSec = system.checkTime(car, endDateTime);
+        long price = system.extractPrice(elapsedSec);
+        system.getUsers().contains(car.getUser());
 
-        extractPrice(elapsedSec);
 
         return null;
     }

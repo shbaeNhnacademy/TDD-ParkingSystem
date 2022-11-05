@@ -30,6 +30,7 @@ class ParkingLotTest {
     ParkingLot parkingLot;
 
     //DOC
+    ParkingSystem parkingSystem ;
     Enterance enterance;
     Exit exit;
 
@@ -39,11 +40,11 @@ class ParkingLotTest {
 
     @BeforeEach
     void setUp() {
+        parkingSystem = mock(ParkingSystem.class);
         enterance = mock(Enterance.class);
         exit = mock(Exit.class);
 
-        parkingLot = new ParkingLot(enterance, exit);
-
+        parkingLot = new ParkingLot(parkingSystem, enterance, exit);
 
         LocalDateTime startDateTime = LocalDateTime.of(2022, 11, 5, 3, 30, 0);
         user = new User(new UserId(111L), new Money(10_000), startDateTime);

@@ -2,20 +2,18 @@ package com.nhnacademy.gw1.parking.parking;
 
 import com.nhnacademy.gw1.parking.car.Car;
 import com.nhnacademy.gw1.parking.car.CarGrade;
-import com.nhnacademy.gw1.parking.exit.EastExit;
 import com.nhnacademy.gw1.parking.user.Money;
 import com.nhnacademy.gw1.parking.user.User;
 import com.nhnacademy.gw1.parking.user.UserId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 class ParkingSystemTest {
@@ -54,5 +52,14 @@ class ParkingSystemTest {
         long elapsedSec = parkingSystem.checkTime(car, endDateTime);
 
         assertThat(elapsedSec).isEqualTo(60 * 60 * 24 * (long) candidate);
+    }
+
+    @ParameterizedTest
+    @DisplayName("시간에 비례한 요금 추출 정상 작동 ")
+    @CsvFileSource(resources = "/extractPriceTest.csv", numLinesToSkip = 1)
+    void extractPrice_success(long elapsedTime, long realPrice) {
+        long price = parkingSystem.extractPrice(elapsedTime);
+
+        assertThat(price).isEqualTo(realPrice);
     }
 }
