@@ -33,9 +33,7 @@ public class ParkingSystem {
 
     public long extractPrice(long elapsedSec) {
         UsingPeriod usingPeriod = new UsingPeriod(elapsedSec);
-
         int totalMinutes = usingPeriod.getMinutes() + usingPeriod.getHours() * 60;
-//        System.out.println(usingPeriod.getDays() + " / " + usingPeriod.getHours()+ " / " + totalMinutes+ " / " + usingPeriod.getSecs());
 
         return calculateByPricePolicy(usingPeriod.getDays(), totalMinutes, usingPeriod.getSecs());
     }
@@ -46,12 +44,10 @@ public class ParkingSystem {
         if (days != 0) {
             price = getPrice(secs, price, restMinutes);
             price += PricePolicy.DAY.getPriceWon() * days; //일 부과 요금
-        }else{
+        } else {
             price = PricePolicy.DEFAULT.getPriceWon(); //기본 부과 요금
             price = getPrice(secs, price, restMinutes);
         }
-//        System.out.println("## price = " + price);
-
         return price;
     }
 

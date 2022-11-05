@@ -1,21 +1,24 @@
 package com.nhnacademy.gw1.parking.exit;
 
 import com.nhnacademy.gw1.parking.car.Car;
-import com.nhnacademy.gw1.parking.parking.ParkingSystem;
+import com.nhnacademy.gw1.parking.exception.UserAmountNotEnoughException;
+import com.nhnacademy.gw1.parking.user.Money;
+import lombok.extern.slf4j.Slf4j;
 
-import java.lang.annotation.Retention;
-import java.time.Duration;
-import java.time.LocalDateTime;
-
+@Slf4j
 public class EastExit implements Exit{
     @Override
-    public Car pay(Car car, ParkingSystem system, LocalDateTime endDateTime) {
-        long elapsedSec = system.checkTime(car, endDateTime);
-        long price = system.extractPrice(elapsedSec);
-        system.getUsers().contains(car.getUser());
-
-
-        return null;
+    public Car pay(Car car, long price) {
+        Money amount = checkUserAmount(car, price);
+        car.getUser().setAmount(new Money(amount.getAmount() - price));
+        return car;
     }
 
+    private static Money checkUserAmount(Car car, long price) {
+        Money amount = car.getUser().getAmount();
+        if (price > amount.getAmount()) {
+            throw new UserAmountNotEnoughException(amount);
+        }
+        return amount;
+    }
 }

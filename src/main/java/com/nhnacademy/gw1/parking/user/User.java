@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 public class User {
     private final UserId userId;
-    private final Money amount;
+    private Money amount;
     private final LocalDateTime startDateTime;
 
     public User(UserId userId, Money amount, LocalDateTime startDateTime) {
@@ -20,6 +20,10 @@ public class User {
 
     public Money getAmount() {
         return amount;
+    }
+
+    public void setAmount(Money amount) {
+        this.amount = amount;
     }
 
     public LocalDateTime getStartDateTime() {

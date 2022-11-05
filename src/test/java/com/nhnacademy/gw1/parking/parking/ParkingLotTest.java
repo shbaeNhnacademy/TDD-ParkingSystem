@@ -5,6 +5,7 @@ import com.nhnacademy.gw1.parking.car.CarGrade;
 import com.nhnacademy.gw1.parking.enterance.Enterance;
 import com.nhnacademy.gw1.parking.exception.DuplicateCarNumberException;
 import com.nhnacademy.gw1.parking.exception.FullLotException;
+import com.nhnacademy.gw1.parking.exception.UnregisteredUserException;
 import com.nhnacademy.gw1.parking.exit.Exit;
 import com.nhnacademy.gw1.parking.user.Money;
 import com.nhnacademy.gw1.parking.user.User;
@@ -12,12 +13,10 @@ import com.nhnacademy.gw1.parking.user.UserId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -94,6 +93,52 @@ class ParkingLotTest {
     }
 
     @Test
-    void exit() {
+    @DisplayName("차량 출차 가능 상태")
+    void exit_success() {
+        long sec = 3601L;
+        long price = 3000L;
+        LocalDateTime endDateTime = LocalDateTime.of(2022, 11, 5, 7, 30, 0);
+        when(parkingSystem.checkTime(car, endDateTime)).thenReturn(sec);
+        when(parkingSystem.extractPrice(sec)).thenReturn(price);
+        when(parkingSystem.getUsers()).thenReturn(new ArrayList<>(List.of(car.getUser())));
+        when(exit.pay(car, price)).thenReturn(car);
+
+        Car exitedCar = parkingLot.exit(car, endDateTime);
+
+        assertThat(exitedCar).isEqualTo(car);
+        verify(parkingSystem, times(1)).checkTime(any(), any());
     }
+
+    @Test
+    @DisplayName("exit 정상 작동 - 사용자 삭제 확인 ")
+    void exit_success_userRemove() {
+        long sec = 3601L;
+        long price = 3000L;
+        LocalDateTime endDateTime = LocalDateTime.of(2022, 11, 5, 7, 30, 0);
+        when(parkingSystem.checkTime(car, endDateTime)).thenReturn(sec);
+        when(parkingSystem.extractPrice(sec)).thenReturn(price);
+        when(parkingSystem.getUsers()).thenReturn(new ArrayList<>(List.of(car.getUser())));
+        when(exit.pay(car, price)).thenReturn(car);
+
+        Car exitedCar = parkingLot.exit(car, endDateTime);
+
+        assertThat(parkingSystem.getUsers().contains(exitedCar)).isFalse();
+    }
+
+    @Test
+    @DisplayName("등록되지않은 사용자인 경우 예외발생")
+    void exit_userNotFound_thenThrowUnregisteredUserException() {
+        long sec = 3601L;
+        long price = 3000L;
+        LocalDateTime endDateTime = LocalDateTime.of(2022, 11, 5, 7, 30, 0);
+        when(parkingSystem.checkTime(car, endDateTime)).thenReturn(sec);
+        when(parkingSystem.extractPrice(sec)).thenReturn(price);
+        when(parkingSystem.getUsers()).thenReturn(new ArrayList<>(List.of(new User(new UserId(11L), new Money(10_000), LocalDateTime.now()))));
+        when(exit.pay(car, price)).thenReturn(car);
+
+        assertThatThrownBy(() -> parkingLot.exit(car, endDateTime))
+                .isInstanceOf(UnregisteredUserException.class)
+                .hasMessageContainingAll("unregistered", car.getUser().getUserId().toString());
+    }
+
 }

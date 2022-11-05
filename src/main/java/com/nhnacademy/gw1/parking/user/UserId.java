@@ -10,4 +10,9 @@ public class UserId {
     public long getUserId() {
         return userId;
     }
+
+    @Override
+    public String toString() {
+        return userId + "";
+    }
 }

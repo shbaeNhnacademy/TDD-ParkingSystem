@@ -1,7 +1,5 @@
 package com.nhnacademy.gw1.parking.user;
 
-import java.math.BigInteger;
-
 public class Money {
     private final long amount;
 
@@ -11,5 +9,10 @@ public class Money {
 
     public long getAmount() {
         return amount;
+    }
+
+    @Override
+    public String toString() {
+        return amount + "";
     }
 }

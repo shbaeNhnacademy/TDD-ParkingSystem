@@ -8,14 +8,12 @@ public class Car {
     private final User user;
     private final CarGrade grade;
 
-
     public Car(Integer number, User user, CarGrade grade) {
         checkCarNumber(number);
         this.number = number;
         this.user = user;
         this.grade = grade;
     }
-
 
     public Integer getNumber() {
         return number;

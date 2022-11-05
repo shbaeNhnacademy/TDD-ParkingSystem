@@ -17,7 +17,6 @@ public class UsingPeriod {
         this.secs = (int) (elapsedSec % 60);
     }
 
-
     public int getDays() {
         return days;
     }

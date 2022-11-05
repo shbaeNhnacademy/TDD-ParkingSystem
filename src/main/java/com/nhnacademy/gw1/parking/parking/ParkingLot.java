@@ -4,10 +4,10 @@ import com.nhnacademy.gw1.parking.car.Car;
 import com.nhnacademy.gw1.parking.enterance.Enterance;
 import com.nhnacademy.gw1.parking.exception.DuplicateCarNumberException;
 import com.nhnacademy.gw1.parking.exception.FullLotException;
+import com.nhnacademy.gw1.parking.exception.UnregisteredUserException;
 import com.nhnacademy.gw1.parking.exit.Exit;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,9 +18,7 @@ public class ParkingLot {
     private final ParkingSystem parkingSystem;
     private final Enterance enterance;
     private final Exit exit;
-
     private static final int MAX_SPACE_SIZE = ParkingSpaceCode.values().length;
-
 
     public ParkingLot(ParkingSystem parkingSystem, Enterance enterance, Exit exit) {
         this.parkingSystem = parkingSystem;
@@ -51,8 +49,19 @@ public class ParkingLot {
         }
     }
 
-    public Car exit(Car car) {
-        return null;
+    public Car exit(Car car, LocalDateTime endDateTime) {
+        checkRegisteredUser(car, this.parkingSystem);
+        long elapsedSec = this.parkingSystem.checkTime(car, endDateTime);
+        long price = this.parkingSystem.extractPrice(elapsedSec);
+        Car paidCar = this.exit.pay(car, price);
+        this.parkingSystem.getUsers().remove(car.getUser());
+        return paidCar;
+    }
+
+    private void checkRegisteredUser(Car car, ParkingSystem system) {
+        if (!system.getUsers().contains(car.getUser())) {
+            throw new UnregisteredUserException(car.getUser());
+        }
     }
 
     private ParkingSpaceCode park(Car car) {
