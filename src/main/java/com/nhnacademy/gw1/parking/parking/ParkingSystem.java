@@ -25,6 +25,7 @@ public class ParkingSystem {
         return users;
     }
 
+
     public long checkTime(Car car, LocalDateTime endDateTime) {
         Duration between = Duration.between(car.getUser().getStartDateTime(), endDateTime);
         return between.getSeconds();
