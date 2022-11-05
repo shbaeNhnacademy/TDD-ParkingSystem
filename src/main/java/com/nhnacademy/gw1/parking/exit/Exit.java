@@ -1,8 +1,21 @@
 package com.nhnacademy.gw1.parking.exit;
 
 import com.nhnacademy.gw1.parking.car.Car;
+import com.nhnacademy.gw1.parking.exception.UserAmountNotEnoughException;
+import com.nhnacademy.gw1.parking.user.Money;
 
 public interface Exit {
-    Car pay(Car car, long price);
+    default Car pay(Car car, long price){
+        Money amount = checkUserAmount(car, price);
+        car.getUser().setAmount(new Money(amount.getAmount() - price));
+        return car;
+    }
 
+    default Money checkUserAmount(Car car, long price) {
+        Money amount = car.getUser().getAmount();
+        if (price > amount.getAmount()) {
+            throw new UserAmountNotEnoughException(amount);
+        }
+        return amount;
+    }
 }

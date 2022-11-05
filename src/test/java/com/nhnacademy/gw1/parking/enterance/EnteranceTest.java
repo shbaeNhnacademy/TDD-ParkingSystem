@@ -10,13 +10,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class EnteranceTest {
-
-
-
     Enterance enterance;
 
     User user;
@@ -32,6 +31,19 @@ class EnteranceTest {
     @Test
     @DisplayName("입구에서 차량 확인 - byPass")
     void scan_success_byPass() {
+        int carNum = 1234;
+        Car car = new Car(carNum, user, CarGrade.COMPACT);
+
+        Car scanCar = enterance.scan(car);
+
+        assertThat(scanCar).isEqualTo(car);
+    }
+
+
+    @Test
+    @DisplayName("새로 추가한 west 입구에서 차량 확인 - byPass")
+    void scan_westEnterance_success_byPass() {
+        enterance = new WestEnterance();
         int carNum = 1234;
         Car car = new Car(carNum, user, CarGrade.COMPACT);
 

@@ -61,4 +61,25 @@ class ExitTest {
                 .hasMessageContainingAll("not have enough money", car.getUser().getAmount().toString());
     }
 
+    @Test
+    @DisplayName("새로 추가한 출구 westExit - pay 정상 작동 ")
+    void pay_westExit_success() {
+        exit = new WestExit();
+        long price = 3000L;
+        Money userAmount = user.getAmount();
+        Car paidCar = exit.pay(car, price);
+
+        assertThat(paidCar.getUser().getAmount().getAmount()).isEqualTo((userAmount.getAmount() - price));
+    }
+
+    @Test
+    @DisplayName("새로 추가한 출구 westExit - 고객이 가지고있는 돈 보다 요금이 더 클 때, 예외발생")
+    void pay_westExit_priceMoreThanAmount_thenThrowUserAmountDeficitException() {
+        exit = new WestExit();
+        long price = 20_000L;
+
+        assertThatThrownBy(() -> exit.pay(car, price))
+                .isInstanceOf(UserAmountNotEnoughException.class)
+                .hasMessageContainingAll("not have enough money", car.getUser().getAmount().toString());
+    }
 }

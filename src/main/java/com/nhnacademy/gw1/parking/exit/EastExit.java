@@ -14,11 +14,4 @@ public class EastExit implements Exit{
         return car;
     }
 
-    private static Money checkUserAmount(Car car, long price) {
-        Money amount = car.getUser().getAmount();
-        if (price > amount.getAmount()) {
-            throw new UserAmountNotEnoughException(amount);
-        }
-        return amount;
-    }
 }
