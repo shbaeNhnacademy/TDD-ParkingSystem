@@ -60,7 +60,6 @@ class ParkingSystemTest {
     @CsvFileSource(resources = "/refactoring_extractPriceTest.csv", numLinesToSkip = 1)
     void extractPrice_success(long elapsedTime, long realPrice) {
         long price = parkingSystem.extractPrice(elapsedTime);
-
         assertThat(price).isEqualTo(realPrice);
     }
 }

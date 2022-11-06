@@ -11,6 +11,8 @@ import com.nhnacademy.gw1.parking.user.UserId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ class ExitTest {
 
         LocalDateTime startDateTime = LocalDateTime.of(2022, 11, 5, 3, 30, 0);
         user = new User(new UserId(111L), new Money(10_000), startDateTime);
-        car = new Car(1234, user, CarGrade.COMPACT);
+        car = new Car(1234, user, CarGrade.MID_SIZE);
 
     }
 
@@ -81,5 +83,15 @@ class ExitTest {
         assertThatThrownBy(() -> exit.pay(car, price))
                 .isInstanceOf(UserAmountNotEnoughException.class)
                 .hasMessageContainingAll("not have enough money", car.getUser().getAmount().toString());
+    }
+
+    @DisplayName("경차인 경우, 50퍼센트 주차비 할인")
+    @ParameterizedTest
+    @ValueSource(longs = {3000L, 4000L, 10000L})
+    void pay_discountSuccess_compactSizeCar(long candidate) {
+        Money userAmount = user.getAmount();
+        Car paidCar = exit.pay(new Car(1231, user, CarGrade.COMPACT), candidate);
+
+        assertThat(paidCar.getUser().getAmount().getAmount()).isEqualTo((userAmount.getAmount() - candidate / 2));
     }
 }

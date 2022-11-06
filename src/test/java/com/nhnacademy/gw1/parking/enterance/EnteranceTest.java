@@ -2,6 +2,7 @@ package com.nhnacademy.gw1.parking.enterance;
 
 import com.nhnacademy.gw1.parking.car.Car;
 import com.nhnacademy.gw1.parking.car.CarGrade;
+import com.nhnacademy.gw1.parking.exception.NotAllowedCarSizeException;
 import com.nhnacademy.gw1.parking.user.Money;
 import com.nhnacademy.gw1.parking.user.User;
 import com.nhnacademy.gw1.parking.user.UserId;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class EnteranceTest {
     Enterance enterance;
@@ -50,5 +52,15 @@ class EnteranceTest {
         Car scanCar = enterance.scan(car);
 
         assertThat(scanCar).isEqualTo(car);
+    }
+
+    @Test
+    @DisplayName("대형차는 주차 할 수 없음")
+    void scan_fullSizeCar_thenThrowNotAllowedCarSizeException() {
+        enterance = new WestEnterance();
+        int carNum = 1234;
+        Car car = new Car(carNum, user, CarGrade.FULL_SIZE);
+        assertThatThrownBy(() -> enterance.scan(car))
+                .isInstanceOf(NotAllowedCarSizeException.class);
     }
 }
