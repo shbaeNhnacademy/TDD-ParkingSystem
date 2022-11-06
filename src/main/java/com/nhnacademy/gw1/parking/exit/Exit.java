@@ -7,12 +7,19 @@ import com.nhnacademy.gw1.parking.user.Money;
 
 public interface Exit {
     default Car pay(Car car, long price){
+        long discountedPrice = verifyDiscount(car, price);
+        Money amount = checkUserAmount(car, discountedPrice);
+        car.getUser().setAmount(new Money(amount.getAmount() - discountedPrice));
+        return car;
+    }
+
+    private static long verifyDiscount(Car car, long price) {
         if (car.getGrade().equals(CarGrade.COMPACT)) {
             price /= 2;
+        } else if (car.getUser().getPayco().isMember()) {
+            price = price - price * Math.round(car.getUser().getPayco().getDISCOUNT_RATE());
         }
-        Money amount = checkUserAmount(car, price);
-        car.getUser().setAmount(new Money(amount.getAmount() - price));
-        return car;
+        return price;
     }
 
     default Money checkUserAmount(Car car, long price) {

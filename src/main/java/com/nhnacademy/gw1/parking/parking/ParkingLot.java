@@ -28,19 +28,15 @@ public class ParkingLot {
         parkingSpaceMap = new ConcurrentHashMap<>();
     }
 
-    public Map<ParkingSpaceCode, ParkingSpace> getParkingSpaceMap() {
-        return parkingSpaceMap;
-    }
-
     public ParkingSpaceCode enter(Car car) {
         Car scanCar = this.enterance.scan(car);
-        checkDuplicateCarNum(scanCar);
+        checkDuplicatedCarNum(scanCar);
         ParkingSpaceCode park = park(scanCar);
         parkingSystem.getUsers().add(car.getUser());
         return park;
     }
 
-    private void checkDuplicateCarNum(Car car) {
+    private void checkDuplicatedCarNum(Car car) {
         for (ParkingSpaceCode key : parkingSpaceMap.keySet()) {
             Integer number = parkingSpaceMap.get(key).getCar().getNumber();
             if (number.equals(car.getNumber())) {
@@ -98,5 +94,9 @@ public class ParkingLot {
             }
         }
         return null;
+    }
+
+    public Map<ParkingSpaceCode, ParkingSpace> getParkingSpaceMap() {
+        return parkingSpaceMap;
     }
 }

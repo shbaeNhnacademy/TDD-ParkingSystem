@@ -7,7 +7,6 @@ public enum PricePolicy {
     DAY(24 * 60, 15_000L),;
 
 
-
     private final int term;
     private final long priceWon;
 

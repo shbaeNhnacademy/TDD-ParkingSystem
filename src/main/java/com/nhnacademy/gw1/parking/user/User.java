@@ -8,10 +8,13 @@ public class User {
     private Money amount;
     private final LocalDateTime startDateTime;
 
+    private final Payco payco;
+
     public User(UserId userId, Money amount, LocalDateTime startDateTime) {
         this.userId = userId;
         this.amount = amount;
         this.startDateTime = startDateTime;
+        payco = new Payco(false);
     }
 
     public UserId getUserId() {
@@ -28,5 +31,9 @@ public class User {
 
     public LocalDateTime getStartDateTime() {
         return startDateTime;
+    }
+
+    public Payco getPayco() {
+        return payco;
     }
 }

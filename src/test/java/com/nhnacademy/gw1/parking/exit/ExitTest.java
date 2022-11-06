@@ -94,4 +94,16 @@ class ExitTest {
 
         assertThat(paidCar.getUser().getAmount().getAmount()).isEqualTo((userAmount.getAmount() - candidate / 2));
     }
+
+    @DisplayName("페이코 회원인 경우 10퍼센트 할인")
+    @ParameterizedTest
+    @ValueSource(longs = {3000L, 4000L, 10000L})
+    void pay_discountSuccess_paycoUser(long candidate) {
+        Money userAmount = user.getAmount();
+        user.getPayco().setMember(true);
+        Car paidCar = exit.pay(new Car(1231, user, CarGrade.MID_SIZE), candidate);
+
+        assertThat(paidCar.getUser().getAmount().getAmount())
+                .isEqualTo(userAmount.getAmount() - (candidate - candidate * Math.round(car.getUser().getPayco().getDISCOUNT_RATE())));
+    }
 }

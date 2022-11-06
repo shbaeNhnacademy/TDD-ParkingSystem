@@ -44,6 +44,10 @@ public class ParkingSystem {
             return PricePolicy.FREE.getPriceWon();
         }
         int restMinutes = minutes - PricePolicy.DEFAULT.getTerm() - PricePolicy.FREE.getTerm(); //추가 부과 시간
+        return verifyDaysOrMinutes(days, secs, restMinutes);
+    }
+
+    private long verifyDaysOrMinutes(int days, int secs, int restMinutes) {
         long price = 0L;
         if (days != 0) {
             price = getPrice(secs, price, restMinutes);
