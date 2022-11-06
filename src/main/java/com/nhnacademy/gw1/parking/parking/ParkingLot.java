@@ -54,8 +54,20 @@ public class ParkingLot {
         long elapsedSec = this.parkingSystem.checkTime(car, endDateTime);
         long price = this.parkingSystem.extractPrice(elapsedSec);
         Car paidCar = this.exit.pay(car, price);
-        this.parkingSystem.getUsers().remove(car.getUser());
+        removeUserAndSpace(car, paidCar);
         return paidCar;
+    }
+
+    private void removeUserAndSpace(Car car, Car paidCar) {
+        this.parkingSystem.getUsers().remove(car.getUser());
+        for (Map.Entry<ParkingSpaceCode, ParkingSpace> parkingSpaceCodeParkingSpaceEntry : parkingSpaceMap.entrySet()) {
+            ParkingSpaceCode key = parkingSpaceCodeParkingSpaceEntry.getKey();
+            ParkingSpace value = parkingSpaceCodeParkingSpaceEntry.getValue();
+            if (value.getCar().equals(paidCar)) {
+                parkingSpaceMap.remove(key);
+                break;
+            }
+        }
     }
 
     private void checkRegisteredUser(Car car, ParkingSystem system) {

@@ -7,6 +7,7 @@ public class UsingPeriod {
     private final int hours;
     private final int minutes;
     private final int secs;
+    private final int hourToMinute;
 
 
     public UsingPeriod(long elapsedSec) {
@@ -15,6 +16,7 @@ public class UsingPeriod {
         this.hours = (int) (elapsedSec / 60 / 60 % 24);
         this.minutes = (int) ((elapsedSec) / 60 % 60);
         this.secs = (int) (elapsedSec % 60);
+        this.hourToMinute = hours * 60;
     }
 
     public int getDays() {
@@ -31,5 +33,20 @@ public class UsingPeriod {
 
     public int getSecs() {
         return secs;
+    }
+
+    public int getHourToMinute() {
+        return hourToMinute;
+    }
+
+    @Override
+    public String toString() {
+        return "UsingPeriod{" +
+                "days=" + days +
+                ", hours=" + hours +
+                ", minutes=" + minutes +
+                ", secs=" + secs +
+                ", hourToMinute=" + hourToMinute +
+                '}';
     }
 }

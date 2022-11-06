@@ -141,4 +141,23 @@ class ParkingLotTest {
                 .hasMessageContainingAll("unregistered", car.getUser().getUserId().toString());
     }
 
+    @Test
+    @DisplayName("exit 정상 작동 - 주차 자리 점유 삭제 확인 ")
+    void exit_success_spaceRemove() {
+        long sec = 3601L;
+        long price = 3000L;
+        LocalDateTime endDateTime = LocalDateTime.of(2022, 11, 5, 7, 30, 0);
+        when(parkingSystem.checkTime(car, endDateTime)).thenReturn(sec);
+        when(parkingSystem.extractPrice(sec)).thenReturn(price);
+        when(parkingSystem.getUsers()).thenReturn(new ArrayList<>(List.of(car.getUser())));
+        when(exit.pay(car, price)).thenReturn(car);
+
+        parkingLot.getParkingSpaceMap().put(ParkingSpaceCode.A_02, new ParkingSpace(ParkingSpaceCode.A_02, car));
+
+        int size = parkingLot.getParkingSpaceMap().size();
+        parkingLot.exit(car, endDateTime);
+
+        assertThat(parkingLot.getParkingSpaceMap().size()).isEqualTo(size - 1); //삭제 확인
+    }
+
 }
