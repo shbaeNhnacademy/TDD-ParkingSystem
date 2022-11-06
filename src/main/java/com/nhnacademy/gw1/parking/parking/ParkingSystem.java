@@ -2,14 +2,12 @@ package com.nhnacademy.gw1.parking.parking;
 
 import com.nhnacademy.gw1.parking.car.Car;
 import com.nhnacademy.gw1.parking.user.User;
-import lombok.extern.slf4j.Slf4j;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
 public class ParkingSystem {
     private final ParkingLot parkingLot;
     private final List<User> users;
@@ -37,10 +35,7 @@ public class ParkingSystem {
         UsingPeriod usingPeriod = new UsingPeriod(elapsedSec);
         int totalMinutes = usingPeriod.getMinutes() + usingPeriod.getHourToMinute();
 
-        log.info("{}", usingPeriod);
-        long calculateByPricePolicy = calculateByPricePolicy(usingPeriod.getDays(), totalMinutes, usingPeriod.getSecs());
-        log.info("{}", calculateByPricePolicy);
-        return calculateByPricePolicy;
+        return calculateByPricePolicy(usingPeriod.getDays(), totalMinutes, usingPeriod.getSecs());
     }
 
     private long calculateByPricePolicy(int days, int minutes, int secs) {

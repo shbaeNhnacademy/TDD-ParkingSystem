@@ -58,7 +58,6 @@ class ParkingSystemTest {
     @ParameterizedTest
     @DisplayName("시간에 비례한 요금 추출 정상 작동 ")
     @CsvFileSource(resources = "/refactoring_extractPriceTest.csv", numLinesToSkip = 1)
-//    @CsvFileSource(resources = "/extractPriceTest.csv", numLinesToSkip = 1)
     void extractPrice_success(long elapsedTime, long realPrice) {
         long price = parkingSystem.extractPrice(elapsedTime);
 
