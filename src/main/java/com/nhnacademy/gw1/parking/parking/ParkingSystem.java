@@ -39,7 +39,7 @@ public class ParkingSystem {
     }
 
     private long calculateByPricePolicy(int days, int minutes, int secs) {
-        boolean canBeFree = (PricePolicy.FREE.getTerm() >= minutes) || (PricePolicy.FREE.getTerm() == minutes && secs == 0);
+        boolean canBeFree = (PricePolicy.FREE.getTerm() > minutes) || (PricePolicy.FREE.getTerm() == minutes && secs == 0);
         if ((days == 0) && canBeFree) {
             return PricePolicy.FREE.getPriceWon();
         }

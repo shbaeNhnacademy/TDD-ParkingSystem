@@ -1,0 +1,5 @@
+
+m	java:S116"XRename this field "DISCOUNT_RATE" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ґжЄы
+7
+java:S1170"!Make this final field static too.(ґжЄы
+c	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(окул

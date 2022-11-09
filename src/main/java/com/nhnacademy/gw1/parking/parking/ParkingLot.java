@@ -73,19 +73,18 @@ public class ParkingLot {
     }
 
     private ParkingSpaceCode park(Car car) {
-        ParkingSpaceCode code = verifyParkingSpace();
-        if (!Objects.isNull(code)) {
-            parkingSpaceMap.put(code, new ParkingSpace(code, car));
-            return code;
-        }
-        throw new FullLotException(car);
+        ParkingSpaceCode code = verifyParkingSpace(car);
+        parkingSpaceMap.put(code, new ParkingSpace(code, car));
+        return code;
     }
 
-    private ParkingSpaceCode verifyParkingSpace() {
-        if (parkingSpaceMap.size() > MAX_SPACE_SIZE) {
-            return null;
-        } else if (parkingSpaceMap.size() == 0) {
+    private ParkingSpaceCode verifyParkingSpace(Car car) {
+        if (parkingSpaceMap.size() == 0) {
             return ParkingSpaceCode.A_01;
+        }
+
+        if (parkingSpaceMap.size() > MAX_SPACE_SIZE) {
+           throw new FullLotException(car);
         }
 
         for (ParkingSpaceCode value : ParkingSpaceCode.values()) {
@@ -93,7 +92,7 @@ public class ParkingLot {
                 return value;
             }
         }
-        return null;
+        throw new FullLotException(car);
     }
 
     public Map<ParkingSpaceCode, ParkingSpace> getParkingSpaceMap() {
